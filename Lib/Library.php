@@ -28,6 +28,11 @@ class Library{
         'adm_library'=>'SCU50'
     ];
 
+    protected $_param_loan_histroy=[
+        'func'=>'bor-history-loan',
+        'adm_library'=>'SCU50'
+    ];
+
     protected $_curl;
 
     public function __construct($sid,$password)
@@ -50,6 +55,37 @@ class Library{
 
 
     /**
+     * 借阅历史
+     * @author mohuishou<1@lailin.xyz>
+     * @return mixed
+     * @throws \Exception
+     */
+    public function loanHistory(){
+        $this->_curl->get($this->_url,$this->_param_loan_histroy);
+        if($this->_curl->error){
+            throw new \Exception('获取当前借阅记录出错！');
+        }
+
+        $page=$this->_curl->response;
+
+        $rule=[
+            'author'=>['td:eq(1)','text'],
+            'title'=>['td:eq(2)','text'],
+            'start_day'=>['td:eq(4)','text'],
+            'end_day'=>['td:eq(5)','text'],
+            'end_time'=>['td:eq(6)','text'],
+            'money'=>['td:eq(7)','text'],
+            'address'=>['td:eq(8)','text'],
+        ];
+
+        $data=QueryList::Query($page,$rule,'center table:eq(1) tr')->data;
+
+        if(strlen($data[0]['end_day'])!=8)
+            unset($data[0]);
+        return $data;
+    }
+
+    /**
      * 当前借阅
      * @author mohuishou<1@lailin.xyz>
      * @return mixed
@@ -66,14 +102,14 @@ class Library{
         $rule=[
             'author'=>['td:eq(2)','text'],
             'title'=>['td:eq(3)','text'],
-            'end_time'=>['td:eq(5)','text'],
+            'end_day'=>['td:eq(5)','text'],
             'money'=>['td:eq(6)','text'],
             'address'=>['td:eq(7)','text'],
             'book_id'=>['td:eq(8)','text'],
         ];
 
         $data=QueryList::Query($page,$rule,'center table:eq(2) tr')->data;
-        if(strlen($data[0]['end_time'])!=8)
+        if(strlen($data[0]['end_day'])!=8)
             unset($data[0]);
         return $data;
     }
