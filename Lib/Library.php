@@ -11,10 +11,16 @@ use QL\QueryList;
 
 class Library{
 
+    /**
+     * 图书馆可用url
+     * @var
+     */
     protected $_url;
 
-    protected $_url_code;
-
+    /**
+     * url参数-登录
+     * @var array
+     */
     protected $_param_login=[
         'func'=>'login-session',
         'login_source'=>'bor-info',
@@ -23,18 +29,36 @@ class Library{
         'bor_library'=>'SCU50',
     ];
 
+    /**
+     * url参数-当前借阅
+     * @var array
+     */
     protected $_param_loan_now=[
         'func'=>'bor-loan',
         'adm_library'=>'SCU50'
     ];
 
+    /**
+     * url参数-借阅历史
+     * @var array
+     */
     protected $_param_loan_histroy=[
         'func'=>'bor-history-loan',
         'adm_library'=>'SCU50'
     ];
 
+    /**
+     * curl对象
+     * @var Curl
+     */
     protected $_curl;
 
+    /**
+     * 初始化，获得已登录的图书馆链接，以便下一步操作
+     * Library constructor.
+     * @param $sid
+     * @param $password
+     */
     public function __construct($sid,$password)
     {
         $this->_curl=new Curl();
@@ -52,7 +76,6 @@ class Library{
         //登录
         $this->login($sid,$password);
     }
-
 
     /**
      * 借阅历史
@@ -168,8 +191,6 @@ class Library{
         }
         $this->_url=$real_url[0];
     }
-
-
 
     /**
      * 生成随机字符串
