@@ -100,6 +100,7 @@ class Library{
         $page=$this->_curl->response;
 
         $rule=[
+            'review_id'=>['td:eq(1) input','name'],
             'author'=>['td:eq(2)','text'],
             'title'=>['td:eq(3)','text'],
             'end_day'=>['td:eq(5)','text'],
