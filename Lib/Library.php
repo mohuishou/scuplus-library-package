@@ -101,11 +101,12 @@ class Library{
         $page=$this->_curl->response;
         $rule=[
             'result'=>['.title','text','',function($content){
-                $res=preg_match_all("/不成功/",$content);
+                $res=preg_match_all("/成功/",$content);
                 if($res){
-                    $res=0;
+                    $res=preg_match_all("/不成功/",$content);
+                    $res=(int)!$res;
                 }else{
-                    $res=1;
+                    $res=0;
                 }
                 return $res;
             }],
