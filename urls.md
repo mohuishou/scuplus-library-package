@@ -27,5 +27,22 @@ method:get
 
 续借全部：
 ```
-url:http://opac.scu.edu.cn:8080/F/77K5KKPMFTPISI2TH6K9E6IELLAR71RH6F87UEQFVVBNBMSYYA-26951?func=bor-renew-all&adm_library=SCU50
+url:http://opac.scu.edu.cn:8080/F/77K5KKPMFTPISI2TH6K9E6IELLAR71RH6F87UEQFVVBNBMSYYA-26951
+method:get 
+param:{
+    func:bor-renew-all
+    adm_library:SCU50
+}
+```
+
+部分续借：
+```
+url:http://opac.scu.edu.cn:8080/F/H3HJ67YH32B1RF1JXHGILB4IA6PR8SKPRN1S44YIXCEQN8YJK8-44634
+method:get 
+param:{
+    func:bor-renew-all
+    renew_selected:Y
+    adm_library:SCU50
+    c001256684000020:Y
+}
 ```

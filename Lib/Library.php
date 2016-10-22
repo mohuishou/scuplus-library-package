@@ -47,6 +47,8 @@ class Library{
         'adm_library'=>'SCU50'
     ];
 
+
+
     /**
      * curl对象
      * @var Curl
@@ -75,6 +77,66 @@ class Library{
 
         //登录
         $this->login($sid,$password);
+    }
+
+    //续借部分
+    public function loanSome($id){
+        $param_loan_some=[
+            "func"=>"bor-renew-all",
+            "renew_selected"=>"Y",
+            "adm_library"=>"SCU50"
+        ];
+        $param_loan_some[$id]="Y";
+
+        $this->_curl->get($this->_url,$param_loan_some);
+        if($this->_curl->error){
+            throw new \Exception('续借失败！');
+        }
+
+        $page=$this->_curl->response;
+        $rule=[
+            'result'=>['.title','text','',function($content){
+                $res=preg_match_all("/不成功/",$content);
+                if($res){
+                    $res=0;
+                }else{
+                    $res=1;
+                }
+                return $res;
+            }],
+            "reason"=>['table:eq(1) tr:eq(1) td:eq(8)','text']
+        ];
+        $data=QueryList::Query($page,$rule,'center')->data;
+        return $data[0];
+    }
+
+    //一键续借（续借全部）
+    public function loanAll(){
+        $param_loan_all=[
+            "func"=>"bor-renew-all",
+            "adm_library"=>"SCU50"
+        ];
+        $this->_curl->get($this->_url,$param_loan_all);
+        if($this->_curl->error){
+            throw new \Exception('续借失败！');
+        }
+
+        $page=$this->_curl->response;
+        $rule=[
+            'result'=>['.title','text','',function($content){
+                $res=preg_match_all("/不成功/",$content);
+                if($res){
+                    $res=0;
+                }else{
+                    $res=1;
+                }
+                return $res;
+            }],
+            "reason"=>['table:eq(1) tr:eq(1) td:eq(8)','text']
+        ];
+        $data=QueryList::Query($page,$rule,'center')->data;
+
+        return $data[0];
     }
 
     /**
@@ -202,10 +264,10 @@ class Library{
     {
         $str = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
-        $strlen =strlen($str);
-        while($length > $strlen){
+        $str_len =strlen($str);
+        while($length > $str_len){
             $str .= $str;
-            $strlen *= 2;
+            $str_len *= 2;
         }
         $str = str_shuffle($str); //随机打乱字符串
         return substr($str, 0,$length);
