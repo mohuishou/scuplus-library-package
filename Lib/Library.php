@@ -79,7 +79,12 @@ class Library{
         $this->login($sid,$password);
     }
 
-    //续借部分
+    /**
+     * 续借部分图书
+     * @param $id
+     * @return mixed
+     * @throws \Exception
+     */
     public function loanSome($id){
         $param_loan_some=[
             "func"=>"bor-renew-all",
@@ -110,7 +115,11 @@ class Library{
         return $data[0];
     }
 
-    //一键续借（续借全部）
+    /**
+     * 续借全部
+     * @return mixed
+     * @throws \Exception
+     */
     public function loanAll(){
         $param_loan_all=[
             "func"=>"bor-renew-all",
